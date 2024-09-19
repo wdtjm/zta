@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json.schemastore.org/jsconfig",
+  "name": "ZTA",
+  "description": "zjuer's time assistant",
+  "main": "./electron/main.js",
+  "author": "zbw",
+  "version": "0.1.1",
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently vite \"electron .\"",
+    "dev": "vite",
+    "build": "vite build",
+    "electron:build": "npm run build && electron-builder",
+    "electron:start": "electron .",
+    "postinstall": "electron-builder install-app-deps",
+    "preview": "vite preview"
+  },
+  "build": {
+    "appId": "com.zjumsc.zta",
+    "productName": "ZTA",
+    "copyright": "Copyright © year ${author}",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "./electron/python/request.exe",
+        "to": "./request.exe"
+      }
+    ],
+    "publish": {
+      "provider": "generic",
+      "url": "http://zjumsc.com/zta/update"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true
+    },
+    "directories": {
+      "output": "app_client"
+    },
+    "mac": {
+      "category": "public.app-category.music",
+      "icon": "src/assets/favicon.ico",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "icon": "src/assets/favicon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "axios": "^1.7.7",
+    "concurrently": "^8.2.2",
+    "electron-is-dev": "^3.0.1",
+    "electron-store": "^10.0.0",
+    "electron-updater": "^6.3.4",
+    "electron-win-state": "^1.1.22",
+    "electron-window-state": "^5.0.3",
+    "element-plus": "^2.8.1",
+    "iconv-lite": "^0.6.3",
+    "mitt": "^3.0.1",
+    "moment": "^2.30.1",
+    "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^4.0.0",
+    "vue": "^3.4.29",
+    "vue-router": "^4.3.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "electron": "^32.0.2",
+    "electron-builder": "^25.0.5",
+    "less": "^4.2.0",
+    "sass-embedded": "^1.78.0",
+    "vite": "^5.3.1"
+  }
+}
