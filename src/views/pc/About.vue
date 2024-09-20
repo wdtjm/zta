@@ -32,6 +32,9 @@
                 <el-form-item label="团队:">
                     浙江大学学生视窗技术俱乐部
                 </el-form-item>
+                <el-form-item label="意见反馈:">
+                    3220104331@zju.edu.cn
+                </el-form-item>
                 <el-form-item label="社团公众号:">
                     <img height="100px" :src="gzh">
                     <span>(欢迎加入我们)</span>

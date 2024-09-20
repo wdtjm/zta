@@ -1,29 +1,30 @@
-# ztimer
+# ZTA————zjuer's time assistant
 
-This template should help get you started developing with Vue 3 in Vite.
+功能 :
 
-## Recommended IDE Setup
+- 自动获取学在浙大待办
+- 灵活添加待办事项
+- 生成待办事项链接，将待办导入手机日程
+- 查看课表
+- 自定义番茄钟
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+本软件使用electron+vue3开发，通过python打包的exe程序发送请求，使用element-plus、pinia等组件
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
+安装依赖
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+运行
 
 ```sh
-npm run dev
+npm run start
 ```
 
-### Compile and Minify for Production
+打包
 
 ```sh
-npm run build
+npm run electron:build
 ```
+
