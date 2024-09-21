@@ -19,6 +19,7 @@ dist/
 node_modules/
 python
 python/
+!/electron/python/
 
 /cypress/videos/
 /cypress/screenshots/
