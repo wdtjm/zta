@@ -82,6 +82,8 @@ onMounted(() => {
 
   courseTableStore.setLoading(false)
   todoListStore.setting.isLoading = false
+  userInfoStore.setting.isLoading = false
+  todoListStore.setting.isGetUrlLoading = false
 
   EventBus.on('updateToDo', () => {
     todoListStore.setting.isLoading = true
@@ -115,7 +117,7 @@ onMounted(() => {
         }
         todoListStore.lastUpdateTime = new Date().toLocaleString();
         todoListStore.setting.isLoading = false
-        if(todoListStore.setting.openUrlLink){
+        if (todoListStore.setting.openUrlLink) {
           EventBus.emit('getUrlLink')
         }
       } else {
@@ -129,6 +131,41 @@ onMounted(() => {
     })
   })
 
+  EventBus.on('getYjsToken', () => {
+    console.log('getYjsToken')
+    let requestInfo = {
+      mode: "3",
+      account: userInfoStore.accountInfo.account,
+      password: userInfoStore.accountInfo.password,
+    }
+    window.electronAPI.request(JSON.stringify(requestInfo)).then(result => {
+      result = JSON.parse(result.replace(/True/g, 'true').replace(/False/g, 'false').replace(/\'/g, '"'))
+      console.log("login result:", result);
+      if (result.status === 'success') {
+        console.log("login result:", result);
+        userInfoStore.setAccountInfo({
+          account: userInfoStore.accountInfo.account,
+          password: userInfoStore.accountInfo.password,
+          loginStatus: true,
+          role: userInfoStore.accountInfo.role,
+          token: result.data,
+          tokenExpireTime: new Date().getTime() + 1000 * 60 * 60 * 5 // 5h后过期
+        });
+        // 设置个5h的计时器，过期后自动重新获取token
+        if (userInfoStore.setting.updateTokenTimer) {
+          clearTimeout(userInfoStore.setting.updateTokenTimer);
+        }
+        userInfoStore.setting.updateTokenTimer = setTimeout(() => {
+          EventBus.emit('getYjsToken')
+        }, 1000 * 60 * 60 * 5);
+      } else {
+        ElMessage({
+          message: result.message,
+          type: 'token update error',
+        })
+      }
+    })
+  })
 
   EventBus.on('getUrlLink', () => {
     todoListStore.setting.isGetUrlLoading = true
@@ -294,7 +331,12 @@ onMounted(() => {
         //如果没有登录，跳转登录页面
       }
     }
-
+    if(userInfoStore.accountInfo.role == "3"){
+      if(userInfoStore.setting.updateTokenTimer){
+        clearTimeout(userInfoStore.setting.updateTokenTimer);
+      }
+      EventBus.emit('getYjsToken')
+    }
 
     //检测是否有缓存的短学期课表数据
     /* const courseTableStoreKey = "courseTable-" + courseTableStore.courseTableSetting.year + "-" + courseTableStore.courseTableSetting.xq
@@ -435,6 +477,7 @@ onUnmounted(() => {
   EventBus.off('startClock')
   EventBus.off('pauseOrStopClock')
   EventBus.off('getUrlLink')
+  EventBus.off('getYjsToken')
   if (timerInterval) {
     clearInterval(timerInterval)
     timerInterval = null

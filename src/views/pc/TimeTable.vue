@@ -15,7 +15,7 @@
                     <el-radio value="0" size="large">单</el-radio>
                     <el-radio value="1" size="large">双</el-radio>
                 </el-radio-group>
-                <span class="last-update">last update: {{lastUpdate}}</span>
+                <span class="last-update">上次更新: {{lastUpdate}}</span>
                 <el-button :icon="Refresh" @click="refreshTable()" round >
                     <el-icon>
                         <Refresh />
@@ -84,6 +84,9 @@
                                     </p>
                                     <p>{{ getCourse(index3, index2).courseName }}</p>
                                 </div>
+                                <!-- <div class="detail">
+
+                                </div> -->
                             </td>
                         </template>
                     </tr>

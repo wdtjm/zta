@@ -15,6 +15,7 @@ export const useUserInfoStore = defineStore("userInfoStore", {
     setting:{
       defaultPage:"/calendar",
       notShowCourseTable: false,
+      updateTokenTimer: null,//定时器，用于更新研究生的token
     }
   }),
   actions: {

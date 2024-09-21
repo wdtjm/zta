@@ -4,7 +4,7 @@
   "description": "zjuer's time assistant",
   "main": "./electron/main.js",
   "author": "zbw",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "scripts": {
     "start": "concurrently vite \"electron .\"",

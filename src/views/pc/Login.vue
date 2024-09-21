@@ -4,7 +4,7 @@
             <div class="login-title">用户登录</div>
             <el-form :model="formData" :rules="rules" ref="formDataRef">
                 <el-form-item prop="username">
-                    <el-input placeholder="请输入账号" v-model="formData.username" size="large" type="text">
+                    <el-input placeholder="请输入学号" v-model="formData.username" size="large" type="text">
                         <template #prefix>
                             <el-icon>
                                 <i-ep-user />
@@ -47,6 +47,7 @@ import { ElMessage } from 'element-plus';
 //这里使用自行封装的axios，下文已给出，照搬后修改运行端口即可
 import { useRouter } from 'vue-router';
 import { useUserInfoStore } from '@/stores/userInfoStore';
+import  EventBus  from '@/script/eventBus';
 
 const userInfoStore = useUserInfoStore();
 // const checkCodeUrl = "api/checkCode?" + new Date().getTime();
@@ -61,7 +62,7 @@ let formData = reactive({
 const rules = {
     username: [{
         required: true,
-        message: "请输入用户名"
+        message: "请输入学号"
     }],
     password: [{
         required: true,
@@ -124,6 +125,13 @@ const login = () => {
                     token: result.data,
                     tokenExpireTime: new Date().getTime() + 1000 * 60 * 60 * 5 // 5h后过期
                 });
+                // 设置个5h的计时器，过期后自动重新获取token
+                if(userInfoStore.setting.updateTokenTimer){
+                    clearTimeout(userInfoStore.setting.updateTokenTimer);
+                }
+                userInfoStore.setting.updateTokenTimer =  setTimeout(() => {
+                EventBus.emit('getYjsToken')
+                }, 1000 * 60 * 60 * 5);
             }
 
             router.push("/calendar");

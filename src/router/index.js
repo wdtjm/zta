@@ -61,10 +61,6 @@ const router = createRouter({
           component: () => import("@/views/pc/About.vue"),
         }
       ],
-    },
-    {
-      path: "/todoDesktop",
-      component: () => import("@/views/pc/TodoDesktop.vue")
     }
   ],
 });

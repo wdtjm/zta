@@ -1,6 +1,6 @@
 <template>
     <div class="common-layout">
-        <h5 class="mb-2">zjuer's time assistant 0.1.1</h5>
+        <!-- <h5 class="mb-2">zjuer's time assistant 0.1.1</h5> -->
         <el-container class="main-container">
 
             <el-aside style="overflow: hidden; height: auto; width: auto;">

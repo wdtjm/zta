@@ -22,6 +22,7 @@
             </el-form-item>
             <el-form-item label="倒计时结束时打开弹窗通知">
                 <el-switch v-model="tomatoTimerStore.tomatoTimerSetting.openOSNotification"></el-switch>
+                <span>若无通知提示请检查 系统 -> 通知 -> 请勿打扰/自动启用请勿打扰</span>
             </el-form-item>
             <el-form-item label="倒计时结束时打开声音提示">
                 <el-switch v-model="tomatoTimerStore.tomatoTimerSetting.openSoundNotification"></el-switch>
@@ -48,7 +49,7 @@
                 关于ZTA
             </div>
             <el-form-item label="当前版本">
-                <span style="margin-right: 10px;">0.1.1</span>
+                <span style="margin-right: 10px;">0.1.2</span>
                 
             </el-form-item>
             <el-form-item >

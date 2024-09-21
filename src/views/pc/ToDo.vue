@@ -84,8 +84,8 @@
             </template>
             <template #footer>
                 <div style="flex: auto">
-                    <el-button @click="cancelClick">cancel</el-button>
-                    <el-button type="primary" @click="inputComplete()">confirm</el-button>
+                    <el-button @click="cancelClick">取消</el-button>
+                    <el-button type="primary" @click="inputComplete()">提交</el-button>
                 </div>
             </template>
         </el-drawer>
