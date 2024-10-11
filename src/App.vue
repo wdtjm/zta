@@ -85,6 +85,20 @@ onMounted(() => {
   userInfoStore.setting.isLoading = false
   todoListStore.setting.isGetUrlLoading = false
 
+  // 更新后弹窗一次
+  if(userInfoStore.setting.updateInfoShow){
+    ElMessageBox({
+      title: '更新提示',
+      message: '1. 修复了手动更新待办偶尔失败的bug；\n2. 增加了每次修改待办自动同步日历链接的功能；\n3. 修复了若干已知问题。',
+      type: 'info',
+      confirmButtonText: '确定',
+      callback: (action) => {
+        userInfoStore.setting.updateInfoShow = false
+        }
+    })
+    
+  }
+
   EventBus.on('updateToDo', () => {
     todoListStore.setting.isLoading = true
     let requestInfo = {
@@ -117,6 +131,10 @@ onMounted(() => {
         }
         todoListStore.lastUpdateTime = new Date().toLocaleString();
         todoListStore.setting.isLoading = false
+        ElMessage({
+          message: '学在浙大更新成功',
+          type:'success'
+        })
         if (todoListStore.setting.openUrlLink) {
           EventBus.emit('getUrlLink')
         }
@@ -183,6 +201,7 @@ onMounted(() => {
       if (result.data.status == "success") {
         todoListStore.setting.urlLink = result.data.data
         todoListStore.setting.isGetUrlLoading = false
+        todoListStore.setting.lastLinkUpdateTime = new Date().toLocaleString()
       } else {
         ElMessage({
           message: result.data.msg,

@@ -56,7 +56,8 @@ const getScope = (scope) => {
     return "1"
 };
 const updateTodo = ()=>{
-    EventBus.emit('updateTodo');
+    console.log('updateTodo')
+    EventBus.emit('updateToDo')
 }
 const consoleData = (data) => {
     console.log(data)

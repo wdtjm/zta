@@ -40,6 +40,7 @@
             </el-form-item>
             <el-form-item label="将待办自动同步到服务器">
                 <el-switch v-model="todoListStore.setting.openUrlLink"></el-switch>
+                <div v-if="todoListStore.setting.openUrlLink">最后同步于：{{todoListStore.setting.lastLinkUpdateTime}}</div>
             </el-form-item>
             <el-form-item label="是否将学在浙大待办加入待办链接">
                 <el-switch v-model="todoListStore.setting.addXZZDToUrl"></el-switch>
@@ -49,7 +50,7 @@
                 关于ZTA
             </div>
             <el-form-item label="当前版本">
-                <span style="margin-right: 10px;">0.1.2</span>
+                <span style="margin-right: 10px;">0.1.3</span>
                 
             </el-form-item>
             <el-form-item >

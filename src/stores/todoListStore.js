@@ -66,6 +66,7 @@ export const useTodoListStore = defineStore("todoListStore", {
       showPrompt: true,// 是否显示格式提示
       urlLink: "", // 待办事项链接
       openUrlLink: false, // 是否打开待办事项链接
+      lastLinkUpdateTime: "", // 待办事项链接最后更新时间
       addXZZDToUrl: true, // 待办链接中是否加入学在浙大待办
       isGetUrlLoading: false, // 是否正在获取待办事项链接
     },

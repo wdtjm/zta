@@ -52,6 +52,9 @@ if(mode != "4"):
     requests.packages.urllib3.disable_warnings()
     session.post(LOGIN_URL, data=form, verify=False)
     cookies = session.cookies
+    # 把cookies转为json格式
+    cookies_json = requests.utils.dict_from_cookiejar(cookies)
+    
 
 
 def get_course_table():

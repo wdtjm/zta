@@ -97,7 +97,7 @@ import { onMounted, reactive, ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import { useTodoListStore } from '@/stores/todoListStore';
 import { ElMessage } from 'element-plus';
-
+import EventBus from '@/script/eventBus';
 const todoListStore = useTodoListStore()
 console.log('todoList:', todoListStore.todoList)
 
@@ -112,6 +112,14 @@ const FalseValue = ref(false)
 const inputText = ref('')
 const isEdit = ref(false)
 
+const onModifed = () => {
+    console.log('onModifed')
+    if(todoListStore.setting.openUrlLink){
+        EventBus.emit('getUrlLink')
+    }
+    
+}
+
 const addDoneList = (id) => {
     /* console.log('compeletedTodoList',compeletedTodoIdList.value)
     // id不存在时，添加到compeletedTodoIdList中
@@ -125,6 +133,7 @@ const addDoneList = (id) => {
         
         todoListStore.updateTodoStatus(id)
         todoListStore.toggleActive(id)
+        onModifed()
     }, 300)
 }
 const removeDoneList = (id) => {
@@ -137,6 +146,7 @@ const removeDoneList = (id) => {
      compeletedTodoIdList.value.splice(compeletedTodoIdList.value.indexOf(id), 1) */
     console.log('compeletedTodoList remove ', id, compeletedTodoIdList.value)
     todoListStore.updateTodoStatus(id)
+    onModifed()
 }
 const formatDate = function formatDate(date) {
     const year = date.getFullYear();
@@ -201,6 +211,7 @@ const inputComplete = () => {
         eventDate.setSeconds(0);
         eventDate.setMilliseconds(0);
         todoListStore.addTodo({ content: event, time: formatDate(eventDate), isXZZD: false }) 
+        onModifed()
     } else {
         /* ElMessage({
             type: 'error',
@@ -208,6 +219,7 @@ const inputComplete = () => {
         }) */
 
        todoListStore.addTodo({content: inputText.value, time: "2000-01-01 00:00:00", isBrief: true})
+       onModifed()
     }
     console.log(inputText.value)
     inputText.value = ''
@@ -226,13 +238,14 @@ const editTodo = (event, todo) => {
     inputText.value = todo.content + ' ' + (date.getMonth() + 1) + '.' + date.getDate() + " " + date.getHours() + "." + String(date.getMinutes()).padStart(2, '0')
     todoListStore.deleteTodoById(todo.id)
     console.log('editTodo', todo.id)
+    onModifed()
 }
 
 const deleteTodo = (event, id) => {
     event.stopPropagation()
     todoListStore.deleteTodoById(id)
     console.log('deleteTodo', id)
-
+    onModifed()
 }
 
 function cancelClick() {
@@ -257,6 +270,7 @@ const clearAllCompeletedTodoList = () => {
 </script>
 
 <style scoped lang="less">
+
 .floating-component {
     position: fixed;
     /* 固定位置 */
