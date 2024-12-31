@@ -86,18 +86,32 @@ onMounted(() => {
   todoListStore.setting.isGetUrlLoading = false
 
   // 更新后弹窗一次
-  if(userInfoStore.setting.updateInfoShow){
+  // if (userInfoStore.setting.updateInfoShow) {
+  //   ElMessageBox({
+  //     title: '更新提示',
+  //     message: '1. 修复了手动更新待办偶尔失败的bug；\n2. 增加了每次修改待办自动同步日历链接的功能；\n3. 修复了若干已知问题。',
+  //     type: 'info',
+  //     confirmButtonText: '确定',
+  //     callback: (action) => {
+  //       userInfoStore.setting.updateInfoShow = false
+  //     }
+  //   })
+
+  // }
+  if(userInfoStore.setting.updateInfoShow1){
     ElMessageBox({
       title: '更新提示',
-      message: '1. 修复了手动更新待办偶尔失败的bug；\n2. 增加了每次修改待办自动同步日历链接的功能；\n3. 修复了若干已知问题。',
+      message: '添加待办若未指定年份时的默认年份更新成2025，可在设置中修改。',
       type: 'info',
       confirmButtonText: '确定',
       callback: (action) => {
-        userInfoStore.setting.updateInfoShow = false
+        todoListStore.setting.defaultYear = 2025
+        userInfoStore.setting.updateInfoShow1 = false
         }
     })
     
   }
+
 
   EventBus.on('updateToDo', () => {
     todoListStore.setting.isLoading = true
@@ -133,7 +147,7 @@ onMounted(() => {
         todoListStore.setting.isLoading = false
         ElMessage({
           message: '学在浙大更新成功',
-          type:'success'
+          type: 'success'
         })
         if (todoListStore.setting.openUrlLink) {
           EventBus.emit('getUrlLink')
@@ -350,8 +364,8 @@ onMounted(() => {
         //如果没有登录，跳转登录页面
       }
     }
-    if(userInfoStore.accountInfo.role == "3"){
-      if(userInfoStore.setting.updateTokenTimer){
+    if (userInfoStore.accountInfo.role == "3") {
+      if (userInfoStore.setting.updateTokenTimer) {
         clearTimeout(userInfoStore.setting.updateTokenTimer);
       }
       EventBus.emit('getYjsToken')

@@ -45,12 +45,15 @@
             <el-form-item label="是否将学在浙大待办加入待办链接">
                 <el-switch v-model="todoListStore.setting.addXZZDToUrl"></el-switch>
             </el-form-item>
+            <el-form-item label="添加待办时的默认年份">
+                <el-input v-model.number="todoListStore.setting.defaultYear"></el-input>
+            </el-form-item>
             <el-divider />
             <div style="margin-top:-10px;">
                 关于ZTA
             </div>
             <el-form-item label="当前版本">
-                <span style="margin-right: 10px;">0.1.3</span>
+                <span style="margin-right: 10px;">0.1.4</span>
                 
             </el-form-item>
             <el-form-item >
