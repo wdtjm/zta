@@ -27,6 +27,12 @@
             <el-form-item label="倒计时结束时打开声音提示">
                 <el-switch v-model="tomatoTimerStore.tomatoTimerSetting.openSoundNotification"></el-switch>
             </el-form-item>
+            <el-form-item label="显示番茄钟设置页的统计信息">
+                <el-switch v-model="tomatoTimerStore.tomatoTimerSetting.openRecord.setting"></el-switch>
+            </el-form-item>
+            <el-form-item label="显示番茄钟计时页面的统计信息">
+                <el-switch v-model="tomatoTimerStore.tomatoTimerSetting.openRecord.clock"></el-switch>
+            </el-form-item>
             <el-form-item label="输入待办时显示格式提示">
                 <el-switch v-model="todoListStore.setting.showPrompt"></el-switch>
             </el-form-item>
@@ -53,7 +59,7 @@
                 关于ZTA
             </div>
             <el-form-item label="当前版本">
-                <span style="margin-right: 10px;">0.1.4</span>
+                <span style="margin-right: 10px;">0.1.5</span>
                 
             </el-form-item>
             <el-form-item >

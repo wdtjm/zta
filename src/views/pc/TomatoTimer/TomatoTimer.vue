@@ -22,14 +22,29 @@
                 <el-button @click="startClock">开始</el-button>
             </el-form-item>
         </el-form>
+        <div class="record" v-if="timerSetting.openRecord.setting">
+            <div class="record-focus">今日净专注：{{ timerSetting.record[todayStr].focusTime>= 3600 ? (timerSetting.record[todayStr].focusTime / 3600).toFixed(1) + 'h' : (timerSetting.record[todayStr].focusTime / 60).toFixed(0) + 'min' }} </div>
+            <div class="record-total">今日总专注：{{ timerSetting.record[todayStr].totalTime>= 3600 ? (timerSetting.record[todayStr].totalTime / 3600).toFixed(1) + 'h' : (timerSetting.record[todayStr].totalTime / 60).toFixed(0) +'min' }} </div>
+        </div>
     </div>
+
 </template>
 <script setup>
 import { useTomatoTimerStore } from '@/stores/tomatoTimerStore';
 import { useRouter } from 'vue-router';
 import EventBus from "@/script/eventBus"
+import { todayTime } from '@/script/getTodayTime';
+
 const router = useRouter();
 const tomatoTimerStore = useTomatoTimerStore();
+const timerSetting = tomatoTimerStore.tomatoTimerSetting
+const todayStr = todayTime()
+if (!timerSetting.record[todayStr]) {
+        timerSetting.record[todayStr] = {
+          focusTime: 0,
+          totalTime: 0
+        }
+      }
 const setting = tomatoTimerStore.tomatoTimerSetting;
 const startClock = () => {
     console.log('startClock')
@@ -76,5 +91,22 @@ const startClock = () => {
     :deep .el-form-item__content{
         padding-left: 25%;
     }
+}
+.record{
+    margin-top: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+    width: 100%;
+}
+.record-total{
+
+    color: hsla(0, 2%, 10%, 0.49);
+}
+.record-focus{
+
+    color: hsla(0, 2%, 10%, 0.49);
 }
 </style>

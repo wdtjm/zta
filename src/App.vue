@@ -26,6 +26,7 @@ const dialogVisible = ref(false);
 
 import EventBus from './script/eventBus';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import { todayTime } from './script/getTodayTime.js';
 
 
 
@@ -98,18 +99,35 @@ onMounted(() => {
   //   })
 
   // }
-  if(userInfoStore.setting.updateInfoShow1){
+
+
+
+  // if (userInfoStore.setting.updateInfoShow1) {
+  //   ElMessageBox({
+  //     title: '更新提示',
+  //     message: '添加待办若未指定年份时的默认年份更新成2025，可在设置中修改。',
+  //     type: 'info',
+  //     confirmButtonText: '确定',
+  //     callback: (action) => {
+  //       todoListStore.setting.defaultYear = 2025
+  //       userInfoStore.setting.updateInfoShow1 = false
+  //     }
+  //   })
+
+  // }
+
+  if (userInfoStore.setting.updateInfoShow2) {
     ElMessageBox({
       title: '更新提示',
-      message: '添加待办若未指定年份时的默认年份更新成2025，可在设置中修改。',
+      message: "1.番茄钟增加统计时长，可在设置中关闭  \n2.番茄钟新增跳过当前休息/专注时间按钮 \n3.课表增加春夏学期选项",
       type: 'info',
       confirmButtonText: '确定',
       callback: (action) => {
         todoListStore.setting.defaultYear = 2025
-        userInfoStore.setting.updateInfoShow1 = false
-        }
+        userInfoStore.setting.updateInfoShow2 = false
+      }
     })
-    
+
   }
 
 
@@ -414,7 +432,37 @@ onMounted(() => {
     timerStatus.currentStatus = status
   })
 
+  EventBus.on('overCurrentTurn', () => {
+    if(timerSetting.currentStatus == "stop"){
+      return;
+    }
+    // if(timerSetting.currentStatus == "pause"){
+    //   start()
+    // }
+    // 结束当前专注或休息时间
+    if (timerStatus.currentStatus == "focus") {
+      // 如果是最后一轮，则结束计时器
+      if (timerStatus.currentCycle == timerSetting.cycleCount) {
+        timerStatus.currentStatus = "stop"
+        timerStatus.currentTurnTime = 0
+      } else {
+        // 如果不是最后一轮，则切换休息时间
+        timerStatus.currentStatus = "break"
+        timerStatus.currentTurnTime = tomatoTimerStore.getBreakTimerByS
+      }
+    } else {
+      
+      // 如果是休息时间，则进入下一轮专注时间
+      timerStatus.currentCycle++
+      timerStatus.currentTurnTime = tomatoTimerStore.getFocusTimerByS
+      timerStatus.currentStatus = "focus"
+    }
+  })
+
   EventBus.on('startClock', () => {
+    start()
+  })
+  function start(){
     console.log('app vue startClock')
     // 开启定时器
     if (timerInterval) {
@@ -425,17 +473,35 @@ onMounted(() => {
     timerSetting.isStart = true
     timerInterval = setInterval(() => {
       console.log('interval tick')
+      const dateStr = todayTime()
+
+      if (!timerSetting.record[dateStr]) {
+        timerSetting.record[dateStr] = {
+          focusTime: 0,
+          totalTime: 0
+        }
+      }
+      // 记录今天的总时间(s)
+      timerSetting.record[dateStr].totalTime += 1
+
+      console.log('timerSetting.record[', dateStr, ']:', timerSetting.record[dateStr])
+
       switch (tomatoTimerStore.tomatoTimerStatus.currentStatus) {
         case "start":
           timerStatus.currentCycle = 1
           timerStatus.currentTurnTime = tomatoTimerStore.getFocusTimerByS
           timerStatus.currentStatus = "focus"
-          timerSetting.isStart = true
           break;
         case "focus":
           if (timerStatus.currentTurnTime > 0) {
             // 专注状态，正常
             timerStatus.currentTurnTime--
+            // 记录每天的总时间(s)
+            // 获取今天的日期
+            // 如果今天没有记录，则初始化记录
+
+            // 记录今天的专注时间(s)
+            timerSetting.record[dateStr].focusTime++
           } else {
             // 专注时间结束
             if (timerSetting.openOSNotification) {
@@ -489,7 +555,7 @@ onMounted(() => {
       }
     }, 1000)
 
-  })
+  }
   window.electronAPI.test(() => {
     console.log('app webcontent test')
     dialogVisible.value = true;

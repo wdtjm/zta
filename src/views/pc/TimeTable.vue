@@ -3,11 +3,15 @@
         <div class="time-b w100">
             <div class="time-detail">
                 <div style="display: flex; justify-content: flex-start; align-items: center;flex-direction: row;">
-                    <el-button style="margin:10px;" @click="subYear()" :disabled="tabelStore.isMinYear" ><</el-button>
-                    <div> {{ courseTableSetting.year }}-{{String(parseInt(courseTableSetting.year) + 1)}}</div>
-                    <el-button style="margin:10px;" @click="addYear()" :disabled="tabelStore.isMaxYear" >></el-button>
-                    </div>
+                    <el-button style="margin:10px;" @click="subYear()" :disabled="tabelStore.isMinYear">
+                        </el-button>
+                            <div> {{ courseTableSetting.year }}-{{ String(parseInt(courseTableSetting.year) + 1) }}</div>
+                            <el-button style="margin:10px;" @click="addYear()"
+                                :disabled="tabelStore.isMaxYear">></el-button>
+                </div>
                 <el-radio-group style="margin:10px;" v-model="courseTableSetting.term" @change="changeTabel">
+                    <el-radio value="spring" size="large">春</el-radio>
+                    <el-radio value="summer" size="large">夏</el-radio>
                     <el-radio value="fall" size="large">秋</el-radio>
                     <el-radio value="winter" size="large">冬</el-radio>
                 </el-radio-group>
@@ -15,8 +19,8 @@
                     <el-radio value="0" size="large">单</el-radio>
                     <el-radio value="1" size="large">双</el-radio>
                 </el-radio-group>
-                <span class="last-update">上次更新: {{lastUpdate}}</span>
-                <el-button :icon="Refresh" @click="refreshTable()" round >
+                <span class="last-update">上次更新: {{ lastUpdate }}</span>
+                <el-button :icon="Refresh" @click="refreshTable()" round>
                     <el-icon>
                         <Refresh />
                     </el-icon>
@@ -113,18 +117,18 @@ import EventBus from "@/script/eventBus.js";
 import { Refresh } from "@element-plus/icons-vue";
 
 export default {
-    components:{
+    components: {
         Refresh
     }
     ,
     setup() {
         const TableStore = useCourseTableStore();
         const userInfoStore = useUserInfoStore();
-        const refreshTable=()=>{
-            if(userInfoStore.accountInfo.loginStatus != true){
+        const refreshTable = () => {
+            if (userInfoStore.accountInfo.loginStatus != true) {
                 ElMessage.error("请先登录");
                 router.push('/login');
-            }else{
+            } else {
                 EventBus.emit('updateCourseTable')
             }
         };
@@ -180,22 +184,22 @@ export default {
             const year = courseTableStore.courseTableSetting.year;
             const term = courseTableStore.courseTableSetting.term;
             this.lastUpdate = courseTableStore.courseTable[year][term].lastUpdate;
-            if(this.lastUpdate == null || this.lastUpdate == ""){
+            if (this.lastUpdate == null || this.lastUpdate == "") {
                 this.lastUpdate = "暂无"
-            }else{
+            } else {
                 this.lastUpdate = moment(this.lastUpdate).format("YYYY-MM-DD HH:mm:ss")
             }
-            if(userInfoStore.accountInfo.role == "0")//本科生
+            if (userInfoStore.accountInfo.role == "0")//本科生
             {
                 // TODO: lastUpdateTime 为“”时，需要重新获取数据
                 //console.log('lastupdate time before:',courseTableStore.courseTable[year][term].lastUpdate)
                 this.weekCourse = JSON.parse(JSON.stringify(courseTableStore.courseTable[year][term].data))
                 //console.log('lastUpdate time:',this.lastUpdate)
-            }else{
+            } else {
                 this.weekCourse = JSON.parse(JSON.stringify(courseTableStore.getYjsCourseTable))
                 //console.log('lastUpdate time:',this.lastUpdate)
             }
-            
+
             console.log('this.$courseTable.fall.courses', this.weekCourse);
             if (this.weekCourse == null || this.weekCourse.length === 0) {
                 ElMessage.error("课程表数据为空，正在获取中");
@@ -203,9 +207,9 @@ export default {
             } else {
                 this.filterSingleOrDouble();
                 this.colorList = colorList;
-                console.log('before sort:',this.weekCourse)
+                console.log('before sort:', this.weekCourse)
                 this.sortData();
-                console.log('after sort:',this.weekCourse)
+                console.log('after sort:', this.weekCourse)
                 this.init();
                 this.getWeek(0);
                 console.log('weeks:', this.weeks);
@@ -248,14 +252,16 @@ export default {
             return this.count;
         },
         changeTabel() {
-            const courseTableStore = useCourseTableStore();
-            if(this.courseTableSetting.term == "fall"){
-                this.courseTableSetting.xq = "1"
-            }else{
-                if(this.courseTableSetting.term == "winter"){
-                    this.courseTableSetting.xq = "2"
-                }
+            const termToNumber = {
+                "fall": "1",
+                "winter": "2",
+                "spring": "3",
+                "summer": "4"
             }
+
+            const courseTableStore = useCourseTableStore();
+            this.courseTableSetting.xq = termToNumber[this.courseTableSetting.term];
+
             courseTableStore.setCourseTableSetting(this.courseTableSetting);
             console.log('update courseTableSetting', this.courseTableSetting)
             console.log('after update courseTableSetting', courseTableStore.courseTableSetting)
@@ -264,48 +270,48 @@ export default {
             //router.go(0)
             //router.replace({ path: router.currentRoute.value.path });
             // 检查是否登录
-        const userInfoStore = useUserInfoStore();
-        if (userInfoStore.accountInfo.loginStatus != true) {
-            ElMessage.error("请先登录");
-            router.push('/login');
-        } else {
-            const courseTableStore = useCourseTableStore();
-            this.courseTableSetting = courseTableStore.courseTableSetting;
-
-            const year = courseTableStore.courseTableSetting.year;
-            const term = courseTableStore.courseTableSetting.term;
-            if(userInfoStore.accountInfo.role == "0")//本科生
-            {
-                this.weekCourse = JSON.parse(JSON.stringify(courseTableStore.courseTable[year][term].data))
-            }else{
-                this.weekCourse = JSON.parse(JSON.stringify(courseTableStore.getYjsCourseTable))
-            }
-            
-            console.log('this.$courseTable.fall.courses', this.weekCourse);
-            if (this.weekCourse == null || this.weekCourse.length === 0) {
-                ElMessage.error("课程表数据为空，正在获取中");
-                EventBus.emit('updateCourseTable')
+            const userInfoStore = useUserInfoStore();
+            if (userInfoStore.accountInfo.loginStatus != true) {
+                ElMessage.error("请先登录");
+                router.push('/login');
             } else {
-                this.filterSingleOrDouble();
-                this.colorList = colorList;
-                console.log('before sort:',this.weekCourse)
-                this.sortData();
-                console.log('after sort:',this.weekCourse)
-                this.init();
-                this.getWeek(0);
-                console.log('weeks:', this.weeks);
-                console.log('maxCourseLength:', this.maxCourseLength);
-                console.log('weekCourse:', this.weekCourse);
-                console.log('this.getCourse(0,0)', this.getCourse(0, 0))
-                console.log('0 0 ', this.weekCourse[0].courses[0]);
-                console.log('0 1 ', this.weekCourse[0].courses[1]);
-                // this.courseTableSetting.isLoading = false;
+                const courseTableStore = useCourseTableStore();
+                this.courseTableSetting = courseTableStore.courseTableSetting;
+
+                const year = courseTableStore.courseTableSetting.year;
+                const term = courseTableStore.courseTableSetting.term;
+                if (userInfoStore.accountInfo.role == "0")//本科生
+                {
+                    this.weekCourse = JSON.parse(JSON.stringify(courseTableStore.courseTable[year][term].data))
+                } else {
+                    this.weekCourse = JSON.parse(JSON.stringify(courseTableStore.getYjsCourseTable))
+                }
+
+                console.log('this.$courseTable.fall.courses', this.weekCourse);
+                if (this.weekCourse == null || this.weekCourse.length === 0) {
+                    ElMessage.error("课程表数据为空，正在获取中");
+                    EventBus.emit('updateCourseTable')
+                } else {
+                    this.filterSingleOrDouble();
+                    this.colorList = colorList;
+                    console.log('before sort:', this.weekCourse)
+                    this.sortData();
+                    console.log('after sort:', this.weekCourse)
+                    this.init();
+                    this.getWeek(0);
+                    console.log('weeks:', this.weeks);
+                    console.log('maxCourseLength:', this.maxCourseLength);
+                    console.log('weekCourse:', this.weekCourse);
+                    console.log('this.getCourse(0,0)', this.getCourse(0, 0))
+                    console.log('0 0 ', this.weekCourse[0].courses[0]);
+                    console.log('0 1 ', this.weekCourse[0].courses[1]);
+                    // this.courseTableSetting.isLoading = false;
+                }
+                this.show = false;
+                this.$nextTick(() => {
+                    this.show = true;
+                })
             }
-            this.show = false;
-            this.$nextTick(() => {
-                this.show = true;
-            })
-        }
 
         },
         // 排序周期和课数
@@ -361,25 +367,25 @@ export default {
                         // console.log("max:", max);
 
                         //如果当天的课节总数小于当天的最大课节值
-     
-                            //以最大课节值为终点遍历当天课节
-                            for (let i = 0; i < 13; i++) {
-                                //如果下标课节不存在或着与循环的下标不匹配
-                                if (!item[key][i] || item[key][i].index != i + 1) {
-                                    item[key].splice(i, 0, " "); //填充空课节
-                                }
+
+                        //以最大课节值为终点遍历当天课节
+                        for (let i = 0; i < 13; i++) {
+                            //如果下标课节不存在或着与循环的下标不匹配
+                            if (!item[key][i] || item[key][i].index != i + 1) {
+                                item[key].splice(i, 0, " "); //填充空课节
                             }
-                            for (let j = 0; j < item[key].length; j++) {
-                                if (item[key][j] != " ") {
-                                    if (item[key][j].num > 1) {
-                                        for (let k = 1; k < item[key][j].num; k++) {
-                                            item[key][j + k] = "occupied";
-                                        }
+                        }
+                        for (let j = 0; j < item[key].length; j++) {
+                            if (item[key][j] != " ") {
+                                if (item[key][j].num > 1) {
+                                    for (let k = 1; k < item[key][j].num; k++) {
+                                        item[key][j + k] = "occupied";
                                     }
                                 }
                             }
+                        }
 
-                        
+
                     }
                 }
                 return item.week;
@@ -456,11 +462,11 @@ export default {
             this.startTime = last_monday;
             this.endTime = last_sunday;
         },
-        subYear(){
+        subYear() {
             this.courseTableSetting.year = String(parseInt(this.courseTableSetting.year) - 1);
             this.changeTabel();
         },
-        addYear(){
+        addYear() {
             this.courseTableSetting.year = String(parseInt(this.courseTableSetting.year) + 1);
             this.changeTabel();
         }
@@ -562,10 +568,11 @@ export default {
         }
     }
 }
-.last-update{
-    margin-left:10px;
+
+.last-update {
+    margin-left: 10px;
     font-size: small;
     margin-right: 10px;
-    color:#333333;
+    color: #333333;
 }
 </style>

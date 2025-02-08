@@ -11,6 +11,12 @@ export const useTomatoTimerStore = defineStore("tomatoTimerStore", {
       openSoundNotification: true,
       //是否已经开始计时
       isStart: false,
+      // 每日累计时间
+      record:{},
+      openRecord:{
+        setting: true, // 显示番茄钟设置页的统计信息
+        clock: true // 显示番茄钟计时页面的统计信息
+      }
     },
     tomatoTimerStatus: {
       currentTurnTime: 0, //当前阶段剩余时间

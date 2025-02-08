@@ -28,3 +28,6 @@ npm run start
 npm run electron:build
 ```
 
+todo:
+跳过当前轮次
+桌面组件

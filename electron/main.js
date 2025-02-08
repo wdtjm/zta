@@ -57,6 +57,7 @@ const work = () => {
     win = new BrowserWindow({
       width: 1100,
       height: 640,
+      setAlwaysOnBottom: true, // 置于最底层
       webPreferences: {
         devTools: isDev,
         webSecurity: false, // 禁用 Web 安全策略
