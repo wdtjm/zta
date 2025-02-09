@@ -116,15 +116,15 @@ onMounted(() => {
 
   // }
 
-  if (userInfoStore.setting.updateInfoShow2) {
+  if (userInfoStore.setting.updateInfoShow3) {
     ElMessageBox({
       title: '更新提示',
-      message: "1.番茄钟增加统计时长，可在设置中关闭  \n2.番茄钟新增跳过当前休息/专注时间按钮 \n3.课表增加春夏学期选项",
+      message: "1.番茄钟增加统计时长，可在设置中关闭  \n2.番茄钟新增跳过当前休息/专注时间按钮 \n3.课表增加春夏学期选项 \n4.修复了暂停期间总专注时长继续统计的bug",
       type: 'info',
       confirmButtonText: '确定',
       callback: (action) => {
         todoListStore.setting.defaultYear = 2025
-        userInfoStore.setting.updateInfoShow2 = false
+        userInfoStore.setting.updateInfoShow3 = false
       }
     })
 
@@ -481,8 +481,7 @@ onMounted(() => {
           totalTime: 0
         }
       }
-      // 记录今天的总时间(s)
-      timerSetting.record[dateStr].totalTime += 1
+
 
       console.log('timerSetting.record[', dateStr, ']:', timerSetting.record[dateStr])
 
@@ -496,12 +495,15 @@ onMounted(() => {
           if (timerStatus.currentTurnTime > 0) {
             // 专注状态，正常
             timerStatus.currentTurnTime--
+
             // 记录每天的总时间(s)
             // 获取今天的日期
             // 如果今天没有记录，则初始化记录
 
             // 记录今天的专注时间(s)
             timerSetting.record[dateStr].focusTime++
+                  // 记录今天的总时间(s)
+            timerSetting.record[dateStr].totalTime += 1 
           } else {
             // 专注时间结束
             if (timerSetting.openOSNotification) {
@@ -527,6 +529,8 @@ onMounted(() => {
           if (timerStatus.currentTurnTime > 0) {
             // 短休息状态，正常
             timerStatus.currentTurnTime--
+                  // 记录今天的总时间(s)
+            timerSetting.record[dateStr].totalTime += 1
           } else {
             // 短休息时间结束
             if (timerSetting.openOSNotification) {

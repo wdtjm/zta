@@ -59,7 +59,7 @@
                 关于ZTA
             </div>
             <el-form-item label="当前版本">
-                <span style="margin-right: 10px;">0.1.5</span>
+                <span style="margin-right: 10px;">0.1.6</span>
                 
             </el-form-item>
             <el-form-item >

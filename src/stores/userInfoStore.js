@@ -16,6 +16,7 @@ export const useUserInfoStore = defineStore("userInfoStore", {
       updateInfoShow:true, // 显示已更新内容
       updateInfoShow1:true, // 显示已更新内容
       updateInfoShow2:true, // 显示已更新内容
+      updateInfoShow3:true, // 显示已更新内容
       defaultPage:"/calendar",
       notShowCourseTable: false,
       updateTokenTimer: null,//定时器，用于更新研究生的token
